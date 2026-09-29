@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "meta": {
+    "lastScanned": "2026-09-29T10:53:38.341Z",
+    "fileCount": 13,
+    "hits": 0,
+    "misses": 0,
+    "renderedHash": "7c178302ec35576609da60106160f9b9130f6ff98e6b255e6952cf71373faba5",
+    "storeUpdatedAt": "2026-09-29T10:53:38.341Z",
+    "rootHash": "7c7869b8312b11bd"
+  },
+  "files": {
+    ".gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 168,
+      "hash": "7df00779ed0e2076",
+      "size": 630,
+      "mtimeMs": 1790678855840.7805,
+      "updatedAt": "2026-09-29T10:53:38.280Z",
+      "source": "scan",
+      "importance": 0.3793
+    },
+    "CLAUDE.md": {
+      "description": "OpenWolf",
+      "tokens": 99,
+      "hash": "074d6b42b583729a",
+      "size": 395,
+      "mtimeMs": 1790679218261.9275,
+      "updatedAt": "2026-09-29T10:53:38.280Z",
+      "source": "scan",
+      "importance": 0.3793
+    },
+    "GEMINI.md": {
+      "description": "OpenWolf",
+      "tokens": 75,
+      "hash": "e401f79554a8d796",
+      "size": 297,
+      "mtimeMs": 1790679218266.9275,
+      "updatedAt": "2026-09-29T10:53:38.280Z",
+      "source": "scan",
+      "importance": 0.3793
+    },
+    "LICENSE": {
+      "description": "Project license",
+      "tokens": 9374,
+      "hash": "3972dc9744f6499f",
+      "size": 35149,
+      "mtimeMs": 1790678842289.5396,
+      "updatedAt": "2026-09-29T10:53:38.281Z",
+      "source": "scan",
+      "importance": 0.3793
+    },
+    "README.md": {
+      "description": "Project documentation",
+      "tokens": 16,
+      "hash": "ae81601a2b36f70c",
+      "size": 64,
+      "mtimeMs": 1790678842316.9082,
+      "updatedAt": "2026-09-29T10:53:38.281Z",
+      "source": "scan",
+      "importance": 0.3793
+    },
+    "src/app/setup.go": {
+      "description": "preforms basic app functions like setup, loading config and global definitions",
+      "tokens": 155,
+      "hash": "29fe44802268efb6",
+      "size": 540,
+      "mtimeMs": 1790678842288.9329,
+      "updatedAt": "2026-09-29T10:53:38.281Z",
+      "source": "scan",
+      "importance": 1
+    },
+    "src/app/var.go": {
+      "description": "",
+      "tokens": 101,
+      "hash": "adf3338002cd0a2a",
+      "size": 351,
+      "mtimeMs": 1790678842289.0132,
+      "updatedAt": "2026-09-29T10:53:38.282Z",
+      "source": "scan",
+      "importance": 0.3793
+    },
+    "src/app/zap.go": {
+      "description": "Declares name",
+      "tokens": 673,
+      "hash": "b1e1565fba306f2d",
+      "size": 2355,
+      "mtimeMs": 1790678842289.0554,
+      "updatedAt": "2026-09-29T10:53:38.283Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "prodLoggerSetup",
+          "kind": "fn",
+          "startLine": 10,
+          "endLine": 71,
+          "tokens": 599
+        },
+        {
+          "name": "devLoggerSetup",
+          "kind": "fn",
+          "startLine": 73,
+          "endLine": 81,
+          "tokens": 52
+        }
+      ],
+      "symbolSource": "ts",
+      "importance": 0.3793
+    },
+    "src/cmd/version/version.go": {
+      "description": "provides basic version infromation for app",
+      "tokens": 293,
+      "hash": "6a6cdb372ede69d5",
+      "size": 1023,
+      "mtimeMs": 1790678842289.3694,
+      "updatedAt": "2026-09-29T10:53:38.283Z",
+      "source": "scan",
+      "imports": [
+        "src/app/setup.go"
+      ],
+      "importance": 0.5405
+    },
+    "src/go.mod": {
+      "description": "Go module definition",
+      "tokens": 53,
+      "hash": "19f3438043043a03",
+      "size": 198,
+      "mtimeMs": 1790678842289.443,
+      "updatedAt": "2026-09-29T10:53:38.284Z",
+      "source": "scan",
+      "importance": 0.3793
+    },
+    "src/go.sum": {
+      "description": "Go dependency checksums",
+      "tokens": 131,
+      "hash": "93c40dd586b40acd",
+      "size": 489,
+      "mtimeMs": 1790678842289.493,
+      "updatedAt": "2026-09-29T10:53:38.284Z",
+      "source": "scan",
+      "importance": 0.3793
+    },
+    "src/main.go": {
+      "description": "",
+      "tokens": 122,
+      "hash": "ccf878e849815377",
+      "size": 424,
+      "mtimeMs": 1790678842289.6094,
+      "updatedAt": "2026-09-29T10:53:38.284Z",
+      "source": "scan",
+      "imports": [
+        "src/app/setup.go",
+        "src/cmd/version/version.go"
+      ],
+      "importance": 0.3793
+    },
+    "taskfile.yaml": {
+      "description": "",
+      "tokens": 463,
+      "hash": "756c01bc3e53f3c3",
+      "size": 1619,
+      "mtimeMs": 1790679123663.1133,
+      "updatedAt": "2026-09-29T10:53:38.284Z",
+      "source": "scan",
+      "importance": 0.3793
+    }
+  },
+  "preamble": [
+    "> Project structure index. Auto-maintained by OpenWolf hooks and daemon.",
+    "> Run `openwolf scan` to generate, or wait for the first Claude Code session.",
+    "> Status: Pending initial scan"
+  ]
+}
