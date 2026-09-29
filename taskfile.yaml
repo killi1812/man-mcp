@@ -38,28 +38,44 @@ tasks:
       - cmd: go build -ldflags="{{.LDFLAGS}}" -o {{.ROOT_DIR}}/{{.BINARY_DIR}}/{{.BINARY_NAME}} .
     silent: true
 
+  clean:
+    description: remove build artifacts and test files
+    cmds:
+      - rm -f {{.ROOT_DIR}}/{{.BINARY_NAME}}
+      - rm -rf {{.ROOT_DIR}}/bin/
+      - rm -f {{.ROOT_DIR}}/src/coverage.*
+      - rm -f {{.ROOT_DIR}}/coverage.*
+    silent: false
+
   install:
     description: install project as your local binary
     vars:
       BUILD: "prod"
-    # TODO: Implement
+      INSTALL_DIR:
+        sh: echo "${GOBIN:-$HOME/.local/bin}"
     cmds:
       - task: build
         vars:
           BUILD: "{{.BUILD}}"
-    silent: true
+      - mkdir -p {{.INSTALL_DIR}}
+      - cp {{.ROOT_DIR}}/{{.BINARY_DIR}}/{{.BINARY_NAME}} {{.INSTALL_DIR}}/{{.BINARY_NAME}}
+      - echo "Installed {{.BINARY_NAME}} to {{.INSTALL_DIR}}/{{.BINARY_NAME}}"
+    silent: false
 
   test:
     description: run project tests
     dir: src
-    # TODO: Implement
-    silent: true
+    cmds:
+      - go test -v ./...
+    silent: false
 
   coverage:
     description: creates project coverage file
     dir: src
-    # TODO: Implement
-    silent: true
+    cmds:
+      - go test -coverprofile=coverage.out ./...
+      - go tool cover -func=coverage.out
+    silent: false
 
   list-tools:
     cmds:

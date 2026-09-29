@@ -16,4 +16,8 @@ var (
 	CommitHash = "n/a"
 	// BuildTimestamp stores when the app was build
 	BuildTimestamp = "n/a"
+	// LogFilePath points to an optional log file
+	LogFilePath = ""
+	// Verbose toggles debug logging
+	Verbose = false
 )

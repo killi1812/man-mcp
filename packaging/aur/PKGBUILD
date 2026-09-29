@@ -1,0 +1,36 @@
+# Maintainer: Fran Cvok <cvok.fran@gmail.com>
+pkgname=man-mcp-git
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="Model Context Protocol (MCP) server for local system man pages"
+arch=('x86_64' 'aarch64')
+url="https://github.com/killi1812/man-mcp"
+license=('GPL-3.0-or-later')
+depends=('glibc' 'man-db')
+makedepends=('go' 'git')
+provides=('man-mcp')
+conflicts=('man-mcp')
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/man-mcp"
+    git describe --tags --long 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' || echo "0.0.1"
+}
+
+build() {
+    cd "${srcdir}/man-mcp/src"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
+    go build -ldflags="-linkmode=external -extldflags \"${LDFLAGS}\" -X 'github.com/killi1812/man-mcp/app.Build=prod' -X 'github.com/killi1812/man-mcp/app.Version=${pkgver}'" -o man-mcp .
+}
+
+package() {
+    cd "${srcdir}/man-mcp"
+    install -Dm755 "src/man-mcp" "${pkgdir}/usr/bin/man-mcp"
+    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm644 "README.md" "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+}

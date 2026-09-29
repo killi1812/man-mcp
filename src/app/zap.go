@@ -7,75 +7,56 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func prodLoggerSetup() error {
-	consoleLogLevel := zap.LevelEnablerFunc(func(level zapcore.Level) bool {
-		return level >= zapcore.InfoLevel
-	})
+func setupDevLogger() error {
+	core := makeDevCore()
+	return replaceGlobalWithCore(core)
+}
 
-	// log output
-	consoleLogFile := zapcore.Lock(os.Stdout)
+func setupProdLogger() error {
+	core := makeProdCore()
+	return replaceGlobalWithCore(core)
+}
 
-	// log configuration no date time and location, just level
-	consoleLogConfig := zap.NewProductionEncoderConfig()
-	consoleLogConfig.EncodeTime = nil
-	consoleLogConfig.EncodeCaller = nil
-	// consoleLogConfig.EncodeLevel = nil
-	consoleLogConfig.LevelKey = ""
-
-	consoleLogEncoder := zapcore.NewConsoleEncoder(consoleLogConfig)
-
-	/*
-		// file log, text
-		// log level
-		fileLogLevel := zap.LevelEnablerFunc(func(level zapcore.Level) bool {
-			return level >= zapcore.InfoLevel
-		})
-
-		logPath := filepath.Join(config.LOG_FOLDER, config.LOG_FILE)
-		lumberjackLogger := lumberjack.Logger{
-			Filename:   logPath,
-			MaxSize:    config.LOG_FILE_MAX_SIZE,    // size in MB
-			MaxAge:     config.LOG_FILE_MAX_AGE,     // maximum number of days to retain old log files
-			MaxBackups: config.LOG_FILE_MAX_BACKUPS, // maximum number of old log files to retain
-			LocalTime:  true,                        // time used for formatting the timestamps
-			Compress:   false,
-		}
-		fileLogFile := zapcore.Lock(zapcore.AddSync(&lumberjackLogger))
-		// log configuration
-		fileLogConfig := zap.NewProductionEncoderConfig()
-		// configure keys
-		fileLogConfig.TimeKey = "timestamp"
-		fileLogConfig.MessageKey = "message"
-		// configure types
-		fileLogConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-		fileLogConfig.EncodeLevel = zapcore.CapitalLevelEncoder
-		// create encoder
-		fileLogEncoder := zapcore.NewConsoleEncoder(fileLogConfig)
-	*/
-	// setup zap
-	// duplicate log entries into multiple cores
-	core := zapcore.NewTee(
-		zapcore.NewCore(consoleLogEncoder, consoleLogFile, consoleLogLevel),
-		//		zapcore.NewCore(fileLogEncoder, fileLogFile, fileLogLevel),
-	)
-
-	// create logger from core
-	// options = annotate message with the filename, line number, and function name
+func replaceGlobalWithCore(core zapcore.Core) error {
 	logger := zap.New(core, zap.AddCaller())
-	defer logger.Sync()
-
-	// replace global logger
 	_ = zap.ReplaceGlobals(logger)
-
 	return nil
 }
 
-func devLoggerSetup() error {
-	logger, err := zap.NewDevelopment(zap.AddStacktrace(zap.PanicLevel))
-	if err != nil {
-		return err
-	}
-	_ = zap.ReplaceGlobals(logger)
+func makeDevCore() zapcore.Core {
+	level := zap.DebugLevel
+	return buildTeeCore(zapcore.NewConsoleEncoder(devEncoderConfig()), level)
+}
 
-	return nil
+func makeProdCore() zapcore.Core {
+	level := zap.InfoLevel
+	return buildTeeCore(zapcore.NewJSONEncoder(prodEncoderConfig()), level)
+}
+
+func devEncoderConfig() zapcore.EncoderConfig {
+	cfg := zap.NewDevelopmentEncoderConfig()
+	cfg.EncodeLevel = zapcore.CapitalColorLevelEncoder
+	return cfg
+}
+
+func prodEncoderConfig() zapcore.EncoderConfig {
+	cfg := zap.NewProductionEncoderConfig()
+	cfg.EncodeTime = zapcore.ISO8601TimeEncoder
+	return cfg
+}
+
+func buildTeeCore(enc zapcore.Encoder, lvl zapcore.Level) zapcore.Core {
+	stderrCore := zapcore.NewCore(enc, zapcore.Lock(os.Stderr), lvl)
+	if LogFilePath == "" {
+		return stderrCore
+	}
+	return zapcore.NewTee(stderrCore, makeFileCore(lvl))
+}
+
+func makeFileCore(lvl zapcore.Level) zapcore.Core {
+	file, err := os.OpenFile(LogFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return zapcore.NewNopCore()
+	}
+	return zapcore.NewCore(zapcore.NewJSONEncoder(prodEncoderConfig()), zapcore.AddSync(file), lvl)
 }

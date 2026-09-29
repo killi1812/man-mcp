@@ -1,29 +1,20 @@
-// Package app preforms basic app functions like setup, loading config and global definitions
+// Package app performs basic app functions like setup, loading config and global definitions
 package app
 
-import (
-	"fmt"
-)
-
-// Setup will preform app setup or panic of it fails
-// Can only be called once
+// Setup initializes application components.
 func Setup() {
-	// Logger setup
-	{
-		var err error
+	setupLoggerOrPanic()
+}
 
-		if Build == BuildDev {
-			err = devLoggerSetup()
-			if err != nil {
-				fmt.Printf("err: %v\n", err)
-				panic("faled to setup logger")
-			}
-		} else {
-			err = prodLoggerSetup()
-			if err != nil {
-				fmt.Printf("err: %v\n", err)
-				panic("faled to setup logger")
-			}
-		}
+func setupLoggerOrPanic() {
+	if err := initLogger(); err != nil {
+		panic("failed to setup logger: " + err.Error())
 	}
+}
+
+func initLogger() error {
+	if Verbose || Build == BuildDev {
+		return setupDevLogger()
+	}
+	return setupProdLogger()
 }

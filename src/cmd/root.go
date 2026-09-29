@@ -11,9 +11,13 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "man-mcp",
-	Short: "man-mcp CLI",
+	Short: "man-mcp is a Model Context Protocol server exposing system man pages",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return runServe()
+	},
 }
 
+// Execute runs the root command.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -23,5 +27,16 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(app.Setup)
+	addPersistentFlags()
+	registerSubcommands()
+}
+
+func addPersistentFlags() {
+	rootCmd.PersistentFlags().StringVar(&app.LogFilePath, "log", "", "Path to log file")
+	rootCmd.PersistentFlags().BoolVarP(&app.Verbose, "verbose", "v", false, "Enable verbose/debug logging")
+}
+
+func registerSubcommands() {
+	rootCmd.AddCommand(serveCmd)
 	rootCmd.AddCommand(version.VersionCmd)
 }
