@@ -1,0 +1,66 @@
+version: 2
+
+project_name: man-mcp
+
+before:
+  hooks:
+    - go -C src mod tidy
+
+builds:
+  - id: man-mcp
+    dir: src
+    main: .
+    binary: man-mcp
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+      - -X github.com/killi1812/man-mcp/app.Build=prod
+      - -X github.com/killi1812/man-mcp/app.Version={{ .Version }}
+      - -X github.com/killi1812/man-mcp/app.CommitHash={{ .ShortCommit }}
+      - -X github.com/killi1812/man-mcp/app.BuildTimestamp={{ .Date }}
+
+archives:
+  - id: default
+    builds:
+      - man-mcp
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format: tar.gz
+    files:
+      - LICENSE
+      - README.md
+
+nfpms:
+  - id: linux-packages
+    ids:
+      - man-mcp
+    package_name: man-mcp
+    maintainer: "Fran Cvok <cvok.fran@gmail.com>"
+    description: "Model Context Protocol (MCP) server for local system man pages"
+    homepage: "https://github.com/killi1812/man-mcp"
+    license: "GPL-3.0-or-later"
+    formats:
+      - deb
+      - rpm
+      - archlinux
+    dependencies:
+      - man-db
+    bindir: /usr/bin
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - Merge pull request
+      - Merge branch
