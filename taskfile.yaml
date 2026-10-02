@@ -12,7 +12,7 @@ tasks:
     silent: false
 
   dev:
-    description: build project binary for development
+    desc: build project binary for development
     vars:
       BUILD: "dev"
     cmds:
@@ -22,7 +22,7 @@ tasks:
     silent: true
 
   build:
-    description: build project binary
+    desc: build project binary
     dir: src
     vars:
       VERSION:
@@ -39,16 +39,18 @@ tasks:
     silent: true
 
   clean:
-    description: remove build artifacts and test files
+    desc: remove build artifacts and test files
     cmds:
       - rm -f {{.ROOT_DIR}}/{{.BINARY_NAME}}
       - rm -rf {{.ROOT_DIR}}/bin/
+      - rm -rf {{.ROOT_DIR}}/dist/
       - rm -f {{.ROOT_DIR}}/src/coverage.*
       - rm -f {{.ROOT_DIR}}/coverage.*
     silent: false
 
+
   install:
-    description: install project as your local binary
+    desc: install project as your local binary
     vars:
       BUILD: "prod"
       INSTALL_DIR:
@@ -63,19 +65,26 @@ tasks:
     silent: false
 
   test:
-    description: run project tests
+    desc: run project tests
     dir: src
     cmds:
       - go test -v ./...
     silent: false
 
   coverage:
-    description: creates project coverage file
+    desc: creates project coverage file
     dir: src
     cmds:
       - go test -coverprofile=coverage.out ./...
       - go tool cover -func=coverage.out
     silent: false
+
+  snapshot:
+    desc: dry-run package release build locally using goreleaser
+    cmds:
+      - goreleaser release --snapshot --clean
+    silent: false
+
 
   list-tools:
     cmds:

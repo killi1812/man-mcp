@@ -43,4 +43,5 @@ go.work.sum
 
 # build files
 bin/
+dist/
 man-mcp
