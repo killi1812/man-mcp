@@ -1,7 +1,9 @@
 # man-mcp
 
-A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server in Go that gives AI assistants, LLMs, and agents direct access to local system manual pages (`man`) as an authoritative, zero-hallucination source of truth.
 [![M8ven Score](https://m8ven.ai/badge/mcp/killi1812-man-mcp-1b209g?v=dfab5a2fd742d32da4035d61c7a9a5e9)](https://m8ven.ai/mcp/killi1812-man-mcp-1b209g?s=readme)
+
+A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server in Go that gives AI assistants, LLMs, and agents direct access to local system manual pages (`man`) as an authoritative, zero-hallucination source of truth.
+
 ---
 
 ## MCP Tools
